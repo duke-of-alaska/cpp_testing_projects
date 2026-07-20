@@ -1,0 +1,21 @@
+name: C++ CI Build
+
+on:
+  push:
+    branches: [ "main", "features" ]
+  pull_request:
+    branches: [ "main", "features" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout local repository code
+        uses: actions/checkout@v4
+
+      - name: Install C++ compiler tools
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Compile the C++ main program
+        run: g++ -std=c++20 calculatestuff.cpp -o calculatestuff
