@@ -25,4 +25,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Compile the C++ main program
-        run: g++ -std=c++20 './overloaded functions/calculatestuff.cpp' -o calculatestuff
+        run: g++ -std=c++20 './banking/bank.cpp' -o bank
