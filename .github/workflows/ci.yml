@@ -7,22 +7,36 @@ on:
       - 'README.md'
       - 'SECURITY.md'
       - '.gitignore'
-      - '.github/**' # Ignores changes to the workflow files themselves
+      - '.github/**' 
   pull_request:
     branches: [ "main", "features" ]
     paths-ignore:
       - 'README.md'
       - 'SECURITY.md'
       - '.gitignore'
-      - '.github/**' # Ignores changes to the workflow files themselves
+      - '.github/**' 
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout local repository code
         uses: actions/checkout@v4
 
+      # This step fixes Windows by installing the g++ compiler automatically
+      - name: Setup GCC (Windows only)
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: mingw-w64-ucrt-x86_64-gcc
+
+      # This runs the exact same compilation command on all three systems
       - name: Compile the C++ main program
-        run: g++ -std=c++20 './banking/bank.cpp' -o bank
+        run: g++ -std=c++20 ./banking/bank.cpp -o bank
