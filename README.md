@@ -10,4 +10,9 @@ Just the regular:
 git clone https://github.com/duke-of-alaska/cpp_testing_projects.git
 ```
 
+In current directory:
+```bash
+git clone https://github.com/duke-of-alaska/cpp_testing_projects.git .
+```
+
 ### Thanks for Reading!
