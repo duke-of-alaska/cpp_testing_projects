@@ -6,6 +6,6 @@ int main(){
     int u = 10;
     int *pU = &u;
 
-    print << *pU;
+    print << *pU << '\n';
     return 0;
 }
