@@ -3,6 +3,7 @@
 ## What Is This?
 - My hub for C++ projects that are not quite ready for production.
 - May include bugs or unfinished code.
+- May include random code snippets.
 
 ## Installation
 Just the regular:
