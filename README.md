@@ -9,6 +9,7 @@
 Just the regular:
 ```bash
 git clone https://github.com/duke-of-alaska/cpp_testing_projects.git
+cd cpp_testing_projects
 ```
 
 In current directory:
