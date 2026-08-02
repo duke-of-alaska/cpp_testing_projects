@@ -16,4 +16,4 @@ In current directory:
 git clone https://github.com/duke-of-alaska/cpp_testing_projects.git .
 ```
 
-### Thanks for Reading!
+### Thanks for Reading.
