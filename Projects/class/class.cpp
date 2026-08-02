@@ -3,6 +3,7 @@
 
 using str = std::string;
 constexpr auto& print = std::cout;
+constexpr auto& pass = std::cin;
 
 class Nation{
     public:
@@ -19,9 +20,21 @@ class Nation{
 
 int main(){
     Nation nation1;
+    str nationName = "Temp";
+    str nationCapital = "Temp";
+    bool isLandlocked = false;
 
-    nation1.name = "Italy";
-    nation1.capital = "Rome";
-    nation1.isLandlocked = false;
+    print << "Enter the name of the nation: ";
+    std::getline(pass >> std::ws, nationName);
+    nation1.name = nationName;
+
+    print << "Enter the capital of the nation: ";
+    std::getline(pass >> std::ws, nationCapital);
+    nation1.capital = nationCapital;
+
+    print << "Is the nation landlocked? (1 for Yes, 0 for No): ";
+    pass >> isLandlocked;
+    nation1.isLandlocked = isLandlocked;
+
     nation1.showNationInformation();
 }
