@@ -1,40 +1,40 @@
 #include <iostream>
 #include <string>
 
+// Type alias
 using str = std::string;
-constexpr auto& print = std::cout;
-constexpr auto& pass = std::cin;
 
-class Nation{
-    public:
-        str name = "Temp";
-        str capital = "Temp";
-        bool isLandlocked = false;
+// Safe, standard stream references
+auto& print = std::cout;
+auto& pass = std::cin;
 
-        void showNationInformation() const{
-            print << "Nation: " << name << "\n";
-            print << "Capital: " << capital << "\n";
-            print << "Is Landlocked: " << (isLandlocked ? "Yes" : "No") << "\n";
-        }
+class Nation {
+public:
+    // Member initializers
+    str name{"Unknown"};
+    str capital{"Unknown"};
+    bool isLandlocked{false};
+
+    // const member function guaranteeing no mutations to 'this'
+    void showNationInformation() const {
+        print << "\n--- Nation Info ---\n";
+        print << "Nation: " << name << "\n";
+        print << "Capital: " << capital << "\n";
+        print << "Is Landlocked: " << (isLandlocked ? "Yes" : "No") << "\n";
+    }
 };
 
-int main(){
+int main() {
     Nation nation1;
-    str nationName = "Temp";
-    str nationCapital = "Temp";
-    bool isLandlocked = false;
 
     print << "Enter the name of the nation: ";
-    std::getline(pass >> std::ws, nationName);
-    nation1.name = nationName;
+    std::getline(pass, nation1.name);
 
     print << "Enter the capital of the nation: ";
-    std::getline(pass >> std::ws, nationCapital);
-    nation1.capital = nationCapital;
+    std::getline(pass, nation1.capital);
 
     print << "Is the nation landlocked? (1 for Yes, 0 for No): ";
-    pass >> isLandlocked;
-    nation1.isLandlocked = isLandlocked;
+    pass >> nation1.isLandlocked;
 
     nation1.showNationInformation();
 }
