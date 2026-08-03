@@ -7,16 +7,23 @@ using str = std::string;
 auto& print = std::cout;
 auto& pass = std::cin;
 
+str lowercaseAlgo(str& input);
+
 int main(){
 	str toLowercase = "Temp";
 
-    print << "What string of text do you want to lowercase today? ";
+    print << "Enter string to lowercase: ";
     std::getline(pass >> std::ws, toLowercase);
 
-	std::transform(toLowercase.begin(), toLowercase.end(), toLowercase.begin(), [](unsigned char c){
-		return std::tolower(c);
-	});
+	toLowercase = lowercaseAlgo(toLowercase);
 
 	std::cout << toLowercase << '\n';
     return 0;
+}
+
+str lowercaseAlgo(str& input){
+	std::transform(input.begin(), input.end(), input.begin(), [](unsigned char c){
+		return std::tolower(c);
+	});
+	return input;
 }
