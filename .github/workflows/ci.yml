@@ -39,4 +39,4 @@ jobs:
 
       # This runs the exact same compilation command on all three systems
       - name: Compile the C++ main program
-        run: g++ -std=c++20 ./Projects/Part_2/Move/std::move.cpp -o std::move
+        run: g++ -std=c++20 ./Projects/Part_2/Move/std_move.cpp -o std_move
