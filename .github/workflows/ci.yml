@@ -39,4 +39,4 @@ jobs:
 
       # This runs the exact same compilation command on all three systems
       - name: Compile the C++ main program
-        run: g++ -std=c++23 ./Projects/Part_2/Headers/*.cpp -o main_headers
+        run: g++ -std=c++23 ./Projects/Part_2/lambda/adder_by_lambda.cpp -o adder_by_lambda
