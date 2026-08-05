@@ -7,6 +7,8 @@ int main(){
 	return a * b;
 	};
 
+	std::cout << "Welcome to the Lambda multiplication program!\n";
+
 	std::cout << "First number: ";
 	std::cin >> a;
 
