@@ -7,14 +7,14 @@ on:
       - 'README.md'
       - 'SECURITY.md'
       - '.gitignore'
-      - '.github/**' 
+      - '.github/**'
   pull_request:
     branches: [ "main", "features" ]
     paths-ignore:
       - 'README.md'
       - 'SECURITY.md'
       - '.gitignore'
-      - '.github/**' 
+      - '.github/**'
 
 jobs:
   build:
@@ -28,15 +28,24 @@ jobs:
       - name: Checkout local repository code
         uses: actions/checkout@v4
 
-      # This step fixes Windows by installing the g++ compiler automatically
-      - name: Setup GCC (Windows only)
+      # Windows needs a specific setup to route CMake commands through MinGW/MSYS2
+      - name: Setup GCC & CMake (Windows only)
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
           update: true
-          install: mingw-w64-ucrt-x86_64-gcc
+          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
 
-      # This runs the exact same compilation command on all three systems
-      - name: Compile the C++ main program
-        run: g++ -std=c++23 -Os -s adder_by_lambda.cpp -o adder_by_lambda
+      # Step 1: Configure CMake (Creates build files)
+      - name: Configure CMake Project
+        # This line forces Windows to execute inside the MSYS2 environment where GCC lives
+        shell: ${{ matrix.os == 'windows-latest' && 'msys2 {0}' || 'bash' }}
+        run: |
+          cmake -B build -G "${{ matrix.os == 'windows-latest' && 'Ninja' || 'Unix Makefiles' }}"
+
+      # Step 2: Build everything at once!
+      - name: Build all targets
+        shell: ${{ matrix.os == 'windows-latest' && 'msys2 {0}' || 'bash' }}
+        run: |
+          cmake --build build
