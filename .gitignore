@@ -34,23 +34,24 @@
 *.lib
 
 # =======================================================
-# Executables & Extensionless Binaries (Linux / WSL)
+# Executables & Binaries (Windows, Mac, Linux/WSL)
 # =======================================================
 *.exe
 *.out
 *.app
 
-# 1. Ignore all extensionless files in project directories
-*
-!*.*
-!*/
+# Ignore all extensionless files inside the Projects folder (Linux/WSL Executables)
+# This perfectly targets the binaries compiled by CMake without breaking tracked files
+Projects/**/P1_*
+Projects/**/P2_*
+Projects/**/Misc_*
 
-# 2. Whitelist / keep tracked files without extensions
+# Standard Whitelist for root level text files
 !LICENSE
 !Makefile
 !README
-
 # =======================================================
+
 
 # Build directories
 build/
