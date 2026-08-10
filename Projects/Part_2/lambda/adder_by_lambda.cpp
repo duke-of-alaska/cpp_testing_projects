@@ -7,11 +7,17 @@ int main(){
 
 	std::cout << "Enter first number: ";
 	int a{};
-	if (!(std::cin >> a)) return 1;
+	if (!(std::cin >> a)){
+        std::cerr << "Not an integer!\n";
+        return 1;
+    }
 
 	std::cout << "Enter second number: ";
 	int b{};
-	if (!(std::cin >> b)) return 1;
+	if (!(std::cin >> b)){
+        std::cerr << "Not an integer!\n";
+        return 1;
+    }
 
 	const int result = adder(a, b);
 	std::cout << "Sum: " << result << '\n';

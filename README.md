@@ -15,7 +15,6 @@ cd cpp_testing_projects
 In current directory:
 ```bash
 git clone https://github.com/duke-of-alaska/cpp_testing_projects.git .
-cd .
 ```
 
 ### Thanks for Reading.
