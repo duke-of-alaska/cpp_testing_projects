@@ -3,8 +3,8 @@
 #include <algorithm>
 
 using str = std::string;
-auto& print = std::cout;
-auto& pass = std::cin;
+static auto& print = std::cout;
+static auto& pass = std::cin;
 
 str reverseAlgo(str toReverse);
 
