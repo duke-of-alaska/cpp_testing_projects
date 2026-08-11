@@ -12,6 +12,11 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
     # Extract the file name without extension
     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
 
+    # 1. SKIP helper implementation files that don't have main()
+    if(FILE_NAME STREQUAL "Country")
+        continue()
+    endif()
+
     # Extract the folder name it lives in
     get_filename_component(PARENT_DIR ${SOURCE_FILE} DIRECTORY)
     get_filename_component(FOLDER_NAME ${PARENT_DIR} NAME)
@@ -35,16 +40,15 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
 
     add_executable(${TARGET_NAME} ${SOURCE_FILE})
 
-    # -------------------------------------------------------------
-    # 🔥 THE WINDOWS MIN-GW FIX: Manually link the C++23 print library
-    # -------------------------------------------------------------
+    # 2. ATTACH helper files to their respective executables here
+    if(SOURCE_FILE MATCHES "Projects/Part_2/Headers/")
+        if(FILE_NAME STREQUAL "main")
+            target_sources(${TARGET_NAME} PRIVATE "Projects/Part_2/Headers/Country.cpp")
+        endif()
+    endif()
+
     if(MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(${TARGET_NAME} PRIVATE stdc++exp)
     endif()
 
-    if(SOURCE_FILE MATCHES "Projects/Part_2/Headers/")
-        if(TARGET_NAME STREQUAL "Part2_Headers_executable")
-            target_sources(${TARGET_NAME} PRIVATE "Projects/Part_2/Headers/Country.cpp")
-        endif()
-    endif()
 endforeach()

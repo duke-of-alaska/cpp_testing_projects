@@ -28,14 +28,18 @@ jobs:
       - name: Checkout local repository code
         uses: actions/checkout@v4
 
-      # Windows setup for the modern UCRT toolchain
+      # Windows setup for the modern UCRT toolchain (with package caching)
       - name: Setup GCC & CMake (Windows only)
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
           update: true
-          install: mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-cmake mingw-w64-ucrt-x86_64-ninja
+          cache: true  # 👈 Added caching to speed up builds
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
 
       # Windows Compilation Route
       - name: Configure CMake Project (Windows)
@@ -46,13 +50,13 @@ jobs:
       - name: Build all targets (Windows)
         if: matrix.os == 'windows-latest'
         shell: msys2 {0}
-        run: cmake --build build
+        run: cmake --build build --parallel
 
       # Linux / macOS Compilation Route
       - name: Configure CMake Project (Linux/macOS)
         if: matrix.os != 'windows-latest'
-        run: cmake -B build -G "Unix Makefiles"
+        run: cmake -B build
 
       - name: Build all targets (Linux/macOS)
         if: matrix.os != 'windows-latest'
-        run: cmake --build build
+        run: cmake --build build --parallel

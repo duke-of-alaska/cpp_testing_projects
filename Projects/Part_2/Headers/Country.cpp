@@ -7,3 +7,7 @@ Country::Country(std::string countryName) : name(countryName) {}
 void Country::printInfo() const {
     std::cout << "Country: " << name << "\n";
 }
+
+int main() {
+    return 0;
+}
