@@ -1,62 +1,33 @@
-name: C++ CI Build
+name: C++26 Build
 
 on:
   push:
-    branches: [ "main", "features" ]
-    paths-ignore:
-      - 'README.md'
-      - 'SECURITY.md'
-      - '.gitignore'
-      - '.github/**'
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "features" ]
-    paths-ignore:
-      - 'README.md'
-      - 'SECURITY.md'
-      - '.gitignore'
-      - '.github/**'
+    branches: [ "main" ]
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-24.04  # Uses a fresh base environment
 
     steps:
-      - name: Checkout local repository code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # Windows setup for the modern UCRT toolchain (with package caching)
-      - name: Setup GCC & CMake (Windows only)
-        if: matrix.os == 'windows-latest'
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          cache: true  # 👈 Added caching to speed up builds
-          install: >-
-            mingw-w64-ucrt-x86_64-gcc
-            mingw-w64-ucrt-x86_64-cmake
-            mingw-w64-ucrt-x86_64-ninja
+      # 1. Install GCC 14/15 which fully supports C++26 features
+      - name: Install C++26 Compiler
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt-get update
+          sudo apt-get install -y g++-14 gcc-14
 
-      # Windows Compilation Route
-      - name: Configure CMake Project (Windows)
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: cmake -B build -G "Ninja"
+      # 2. Tell CMake to explicitly target the new C++26 compiler binaries
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_CXX_COMPILER=g++-14 \
+            -DCMAKE_C_COMPILER=gcc-14
 
-      - name: Build all targets (Windows)
-        if: matrix.os == 'windows-latest'
-        shell: msys2 {0}
-        run: cmake --build build --parallel
-
-      # Linux / macOS Compilation Route
-      - name: Configure CMake Project (Linux/macOS)
-        if: matrix.os != 'windows-latest'
-        run: cmake -B build
-
-      - name: Build all targets (Linux/macOS)
-        if: matrix.os != 'windows-latest'
-        run: cmake --build build --parallel
+      # 3. Compile all your targets
+      - name: Build All Targets
+        run: cmake --build build
