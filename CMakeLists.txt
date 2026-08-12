@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 project(cpp_learn)
 
 # Force modern C++23 standards so std::print and contains works
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find every single .cpp file anywhere inside the Projects folder
