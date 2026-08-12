@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(cpp_learn)
 
-# Force modern C++23 standards so std::print and contains works
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -47,8 +46,10 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
         endif()
     endif()
 
-    if(MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # Force link the experimental runtime library for all targets generated in this loop
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(${TARGET_NAME} PRIVATE stdc++exp)
     endif()
+
 
 endforeach()
