@@ -1,4 +1,4 @@
-name: C++26 Build
+name: Multiplatform C++26 Verification
 
 on:
   push:
@@ -8,23 +8,47 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04, windows-latest, macos-14]
 
     steps:
-      - name: Checkout repository code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Modern C++26 Compiler
+      # LINUX CONFIGURATION
+      - name: Setup Linux packages
+        if: matrix.os == 'ubuntu-24.04'
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-          sudo apt-get update
-          sudo apt-get install -y g++-14 gcc-14
+          sudo apt-get update && sudo apt-get install -y g++-14 gcc-14
+          echo "CXX=g++-14" >> $GITHUB_ENV
+          echo "CC=gcc-14" >> $GITHUB_ENV
 
-      - name: Configure CMake Targets
+      # MACOS CONFIGURATION
+      - name: Setup macOS packages
+        if: matrix.os == 'macos-14'
         run: |
-          cmake -B build \
-            -DCMAKE_CXX_COMPILER=g++-14 \
-            -DCMAKE_C_COMPILER=gcc-14
+          brew install gcc
+          echo "CXX=g++-14" >> $GITHUB_ENV
+          echo "CC=gcc-14" >> $GITHUB_ENV
 
-      - name: Build All Targets
-        run: cmake --build build
+      # WINDOWS CONFIGURATION
+      - name: Setup Windows MSYS2 Environment
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          install: mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+
+      # COMPILE BLOCK (Cross-Platform Execution)
+      - name: Run Build Core
+        shell: ${{ matrix.os == 'windows-latest' && 'msys2 {0}' || 'bash' }}
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            cmake -B build -G "Ninja" -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc
+          else
+            cmake -B build -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_C_COMPILER=$CC
+          fi
+          cmake --build build
