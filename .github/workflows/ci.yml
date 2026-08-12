@@ -8,26 +8,23 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04  # Uses a fresh base environment
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository code
         uses: actions/checkout@v4
 
-      # 1. Install GCC 14/15 which fully supports C++26 features
-      - name: Install C++26 Compiler
+      - name: Install Modern C++26 Compiler
         run: |
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
           sudo apt-get update
           sudo apt-get install -y g++-14 gcc-14
 
-      # 2. Tell CMake to explicitly target the new C++26 compiler binaries
-      - name: Configure CMake
+      - name: Configure CMake Targets
         run: |
           cmake -B build \
             -DCMAKE_CXX_COMPILER=g++-14 \
             -DCMAKE_C_COMPILER=gcc-14
 
-      # 3. Compile all your targets
       - name: Build All Targets
         run: cmake --build build
