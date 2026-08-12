@@ -2,9 +2,9 @@ name: C++26 Build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "features" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "features" ]
 
 jobs:
   build:
