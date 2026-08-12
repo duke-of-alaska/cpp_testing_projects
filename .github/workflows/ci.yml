@@ -43,13 +43,17 @@ jobs:
         with:
           install: mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
 
-      # COMPILE BLOCK (Cross-Platform Execution)
-      - name: Run Build Core
-        shell: ${{ matrix.os == 'windows-latest' && 'msys2 {0}' || 'bash' }}
+      # COMPILE BLOCK FOR LINUX AND MACOS
+      - name: Run Build Core (Linux / macOS)
+        if: matrix.os != 'windows-latest'
         run: |
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            cmake -B build -G "Ninja" -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc
-          else
-            cmake -B build -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_C_COMPILER=$CC
-          fi
+          cmake -B build -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_C_COMPILER=$CC
+          cmake --build build
+
+      # COMPILE BLOCK FOR WINDOWS ONLY
+      - name: Run Build Core (Windows MSYS2)
+        if: matrix.os == 'windows-latest'
+        shell: msys2 {0}
+        run: |
+          cmake -B build -G "Ninja" -DCMAKE_CXX_COMPILER=g++ -DCMAKE_C_COMPILER=gcc
           cmake --build build
