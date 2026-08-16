@@ -11,11 +11,6 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
     # Extract the file name without extension
     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
 
-    # 1. SKIP helper implementation files that don't have main()
-    if(FILE_NAME STREQUAL "Country")
-        continue()
-    endif()
-
     # Extract the folder name it lives in
     get_filename_component(PARENT_DIR ${SOURCE_FILE} DIRECTORY)
     get_filename_component(FOLDER_NAME ${PARENT_DIR} NAME)
