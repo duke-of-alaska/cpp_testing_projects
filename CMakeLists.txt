@@ -4,7 +4,7 @@ project(cpp_learn)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Define helper/library .cpp files that do NOT contain main()
+# 1. Define library/helper files that do NOT contain main()
 set(HELPER_SOURCES
         "Country.cpp"
 )
@@ -13,17 +13,14 @@ set(HELPER_SOURCES
 file(GLOB_RECURSE ALL_CPP_FILES "Projects/*.cpp")
 
 foreach(SOURCE_FILE ${ALL_CPP_FILES})
-    # Extract the file name without extension
     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
+    get_filename_component(PARENT_DIR ${SOURCE_FILE} DIRECTORY)
+    get_filename_component(FOLDER_NAME ${PARENT_DIR} NAME)
 
-    # Skip helper/library files so CMake doesn't create standalone executables for them
+    # 2. Skip library files so CMake does not create an executable target for them
     if(FILE_NAME IN_LIST HELPER_SOURCES)
         continue()
     endif()
-
-    # Extract the folder name it lives in
-    get_filename_component(PARENT_DIR ${SOURCE_FILE} DIRECTORY)
-    get_filename_component(FOLDER_NAME ${PARENT_DIR} NAME)
 
     if(SOURCE_FILE MATCHES "Part_1")
         set(PREFIX "P1")
@@ -39,21 +36,18 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
         set(TARGET_NAME "${PREFIX}_${FOLDER_NAME}_${FILE_NAME}")
     endif()
 
-    # Replace all blank spaces in the target name with clean underscores
     string(REPLACE " " "_" TARGET_NAME ${TARGET_NAME})
 
     add_executable(${TARGET_NAME} ${SOURCE_FILE})
 
-    # Attach helper files to their respective executables
+    # 3. Attach helper implementations to the targets that require them
     if(SOURCE_FILE MATCHES "Projects/Part_2/Headers/")
         if(FILE_NAME STREQUAL "main")
             target_sources(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Projects/Part_2/Headers/Country.cpp")
         endif()
     endif()
 
-    # Force link the experimental runtime library for all targets generated in this loop
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(${TARGET_NAME} PRIVATE stdc++exp)
     endif()
-
 endforeach()
