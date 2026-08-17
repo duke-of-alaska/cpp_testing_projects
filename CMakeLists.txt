@@ -4,12 +4,22 @@ project(cpp_learn)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Define helper/library .cpp files that do NOT contain main()
+set(HELPER_SOURCES
+        "Country.cpp"
+)
+
 # Find every single .cpp file anywhere inside the Projects folder
 file(GLOB_RECURSE ALL_CPP_FILES "Projects/*.cpp")
 
 foreach(SOURCE_FILE ${ALL_CPP_FILES})
     # Extract the file name without extension
     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
+
+    # Skip helper/library files so CMake doesn't create standalone executables for them
+    if(FILE_NAME IN_LIST HELPER_SOURCES)
+        continue()
+    endif()
 
     # Extract the folder name it lives in
     get_filename_component(PARENT_DIR ${SOURCE_FILE} DIRECTORY)
@@ -34,10 +44,10 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
 
     add_executable(${TARGET_NAME} ${SOURCE_FILE})
 
-    # 2. ATTACH helper files to their respective executables here
+    # Attach helper files to their respective executables
     if(SOURCE_FILE MATCHES "Projects/Part_2/Headers/")
         if(FILE_NAME STREQUAL "main")
-            target_sources(${TARGET_NAME} PRIVATE "Projects/Part_2/Headers/Country.cpp")
+            target_sources(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Projects/Part_2/Headers/Country.cpp")
         endif()
     endif()
 
@@ -45,6 +55,5 @@ foreach(SOURCE_FILE ${ALL_CPP_FILES})
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         target_link_libraries(${TARGET_NAME} PRIVATE stdc++exp)
     endif()
-
 
 endforeach()
