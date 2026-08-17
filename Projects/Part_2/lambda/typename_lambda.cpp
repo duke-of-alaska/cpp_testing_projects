@@ -12,11 +12,12 @@ int main() {
         return a + b;
     };
 
-    cout << "Enter CPU name:\n";
+    cout << "==== Enter CPU name ====\n"
+            "Name:\n";
     str cpuName{};
     if (!(cin >> cpuName)) {
         return 1;
     };
     cout << cpu(plus, cpuName) << '\n';
-
+    return 0;
 }
