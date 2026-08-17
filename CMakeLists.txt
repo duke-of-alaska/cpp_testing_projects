@@ -4,7 +4,7 @@ project(cpp_learn)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 1. Define library/helper files that do NOT contain main()
+# 1. Define library/helper files that do NOT contain main() (include file extensions)
 set(HELPER_SOURCES
         "Country.cpp"
 )
@@ -13,12 +13,14 @@ set(HELPER_SOURCES
 file(GLOB_RECURSE ALL_CPP_FILES "Projects/*.cpp")
 
 foreach(SOURCE_FILE ${ALL_CPP_FILES})
+    # Use NAME to keep the extension (e.g., "Country.cpp") for the matching check
+    get_filename_component(FILE_WITH_EXT ${SOURCE_FILE} NAME)
     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME_WE)
     get_filename_component(PARENT_DIR ${SOURCE_FILE} DIRECTORY)
     get_filename_component(FOLDER_NAME ${PARENT_DIR} NAME)
 
-    # 2. Skip library files so CMake does not create an executable target for them
-    if(FILE_NAME IN_LIST HELPER_SOURCES)
+    # 2. Skip library files so CMake does not create executable targets for them
+    if(FILE_WITH_EXT IN_LIST HELPER_SOURCES)
         continue()
     endif()
 
