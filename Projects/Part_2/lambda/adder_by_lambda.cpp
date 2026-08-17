@@ -1,6 +1,5 @@
 #include <iostream>
 
-int adder(int a, int b);
 
 int main(){
     std::cout << "Welcome to the sum (by lambda) program!\n";
@@ -19,12 +18,12 @@ int main(){
         return 1;
     }
 
+	auto adder = [](int a, int b) {
+		return a + b;
+	};
+
 	const int result = adder(a, b);
 	std::cout << "Sum: " << result << '\n';
 	
 	return 0;
-}
-
-int adder(int a, int b){
-	return a + b;
 }
